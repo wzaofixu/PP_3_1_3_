@@ -1,10 +1,15 @@
 package ru.kata.spring.boot_security.demo.model;
 
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "users")
@@ -14,18 +19,29 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String email;
+
+    @Column(nullable = false, unique = true)
+    private String firstName;
+
+    @Column(nullable = false, unique = true)
+    private String lastName;
 
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @Column(nullable = false)
+    private int age;
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    private String formattedRoles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -39,8 +55,9 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -73,8 +90,53 @@ public class User implements UserDetails {
         this.id = id;
     }
 
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getFormattedRoles() {
+        return formattedRoles;
+    }
+
+    public String getGetFormattedRoles() {
+        return formattedRoles;
+    }
+
+    public void setGetFormattedRoles(String getFormattedRoles) {
+        this.formattedRoles = getFormattedRoles;
+    }
+
     public void setUsername(String username) {
-        this.username = username;
+        this.email = username;
     }
 
     public void setPassword(String password) {
@@ -107,9 +169,12 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username= '" + username + '\'' +
-                ". password= '" + password + '\'' +
-                ". roles=" + roles +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 
